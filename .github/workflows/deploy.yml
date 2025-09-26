@@ -1,0 +1,55 @@
+name: Deploy React App to GitHub Pages
+
+# 1. Cuándo se ejecuta el workflow
+on:
+  push:
+    branches:
+      - main # 🚀 Ejecutar cada vez que haya un push a la rama 'main'
+  workflow_dispatch: # ⚙️ Permite el despliegue manual desde la pestaña Actions
+
+# 2. Permisos para el despliegue
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 3. Trabajos a ejecutar
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout your repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Asegúrate de que esta sea una versión compatible
+
+      # Instalación de dependencias y construcción (npm run build)
+      - name: Install dependencies
+        run: npm install
+      
+      - name: Build project (Vite)
+        run: npm run build
+      
+      # 🔑 Configuración del artifact para el despliegue
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # La carpeta de salida de Vite después de 'npm run build'
+          path: './dist' 
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
