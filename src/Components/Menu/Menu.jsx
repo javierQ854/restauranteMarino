@@ -8,7 +8,7 @@ const Menu = ({base})=>{
                     {Platos.map(plato=>(
                         <div key={plato.id} className="px-3 transition-transform hover:scale-105 py-3 gap-5 justify-center items-center flex flex-col rounded-lg shadow shadow-blue-950">
                             <h4 className="text-center font-semibold text-blue-900 text-lg">{plato.titulo}</h4>
-                            <img className="rounded-xl w-60" src={`${base}${plato.imagen.substring(1)}`} alt={plato.titulo} />
+                            <img className="rounded-xl w-60" src={`${base}${plato.imagen.substring(1)}`} loading="lazy" alt={plato.titulo} />
                             <p className="text-center font-semibold">{plato.descripcion}</p>
                             <p className="font-bold text-blue-950 text-lg">$ {plato.precio}</p>
                         </div>
